@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="10dp">
@@ -10,60 +10,61 @@
         android:id="@+id/icon"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:padding="10dp" />
+        android:padding="10dp"
+        android:src="@drawable/ic_placeholder" />  <!-- Placeholder icon -->
 
     <!-- Transaction Details -->
     <LinearLayout
         android:layout_width="120dp"
-        android:layout_height="52dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
-            android:layout_width="54dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="@font/poppins"
-            android:gravity="center"
-            android:text="Rent"
-            android:textSize="14sp" />
-
-        <TextView
+            android:id="@+id/textCategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="8:30 - April 15"
+            android:text="Food"
             android:textSize="14sp" />
 
+        <TextView
+            android:id="@+id/textDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="8:30 AM - April 15"
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="216dp"
-        android:layout_height="52dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="horizontal"
         android:paddingStart="10dp">
 
-        <TextView
-            android:layout_width="94dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="@font/poppins"
-            android:gravity="center"
-            android:text="Expense"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="91dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="@font/poppins"
-            android:gravity="center"
-            android:text="- $674.40"
-            android:textSize="16sp"
-            android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- Category & Amount -->
+    <TextView
+        android:id="@+id/textType"
+        android:layout_width="94dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="Expense"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textAmount"
+        android:layout_width="91dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="- ₱674.40"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
 </LinearLayout>

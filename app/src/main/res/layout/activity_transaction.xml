@@ -7,15 +7,17 @@
     android:background="#99D0C3">
 
     <ImageButton
-        android:id="@+id/imageButton2"
-        android:layout_width="43dp"
-        android:layout_height="37dp"
+        android:id="@+id/backButton2"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
         android:background="#99D0C3"
+        android:contentDescription="Back Button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="?attr/actionModeCloseDrawable" />
+
 
     <TextView
         android:id="@+id/textView"
@@ -63,7 +65,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView15"
+                android:id="@+id/txtTotalBalance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="120dp"
@@ -103,11 +105,11 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/poppins_bold"
                 android:gravity="center"
-                android:text="Total Balance"
+                android:text="Total Income"
                 android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/textView22"
+                android:id="@+id/txtTotalIncome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -134,7 +136,7 @@
                 android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/textView23"
+                android:id="@+id/txtTotalExpense"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -174,82 +176,32 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/textView25"
+            <Spinner
+                android:id="@+id/spinnerMonthFilter"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_marginStart="37dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="340dp"
-                android:fontFamily="@font/poppins_bold"
-                android:text="April"
+                android:fontFamily="@font/poppins"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.152"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
-                android:layout_width="363dp"
-                android:layout_height="279dp"
+                android:layout_width="384dp"
+                android:layout_height="447dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView25" />
+                app:layout_constraintTop_toBottomOf="@+id/spinnerMonthFilter" />
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="410dp"
-                android:layout_height="113dp"
-                android:layout_marginTop="85dp"
-                app:cardCornerRadius="35dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recyclerView">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="112dp">
-
-                    <Button
-                        android:id="@+id/button3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="13dp"
-                        android:layout_marginEnd="5dp"
-                        android:layout_marginBottom="48dp"
-                        android:text="Button"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/button4"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <Button
-                        android:id="@+id/button4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="52dp"
-                        android:layout_marginTop="13dp"
-                        android:layout_marginEnd="52dp"
-                        android:text="Button"
-                        app:layout_constraintEnd_toStartOf="@+id/button8"
-                        app:layout_constraintStart_toEndOf="@+id/button3"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <Button
-                        android:id="@+id/button8"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="13dp"
-                        android:layout_marginEnd="16dp"
-                        android:text="Button"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
