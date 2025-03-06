@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Progress layer (white for Total Balance) -->
+    <item android:id="@android:id/progress">
+        <clip android:drawable="@android:color/white" android:gravity="left|top">
+            <shape>
+                <solid android:color="@android:color/white" /> <!-- White for Total Balance -->
+            </shape>
+        </clip>
+    </item>
+
+    <!-- Secondary progress layer (black for Total Expenses) -->
+    <item android:id="@android:id/secondaryProgress">
+        <clip android:drawable="@android:color/black" android:gravity="right|top">
+            <shape>
+                <solid android:color="@android:color/black" /> <!-- Black for Total Expenses -->
+            </shape>
+        </clip>
+    </item>
+</layer-list>
