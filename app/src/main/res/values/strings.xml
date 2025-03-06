@@ -1,3 +1,46 @@
 <resources>
     <string name="app_name">PisoWiseFinal</string>
+
+    <string-array name="transaction_types_array">
+        <item>Income</item>
+        <item>Expense</item>
+    </string-array>
+
+    <string-array name="categories_array">
+
+        <item>Food</item>
+        <item>Rent</item>
+        <item>Transportation</item>
+        <item>Entertainment</item>
+        <item>Shopping</item>
+        <item>Health</item>
+        <item>Education</item>
+        <item>Utilities</item>
+        <item>Insurance</item>
+        <item>Others</item>
+
+        <item>Salary</item>
+        <item>Freelance</item>
+        <item>Investments</item>
+        <item>Business</item>
+        <item>Gifts</item>
+        <item>Other Income</item>
+    </string-array>
+
+    <string-array name="months_array">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
+
+
 </resources>

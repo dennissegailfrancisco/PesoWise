@@ -12,15 +12,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PisoWiseFinal"
         tools:targetApi="31">
+
+        <!-- Main Dashboard Activity -->
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.dashboards.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.transactions.AddExpensesActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.transactions.TransactionActivity"
+            android:exported="false" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
