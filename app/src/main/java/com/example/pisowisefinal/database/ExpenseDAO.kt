@@ -3,9 +3,7 @@ package com.example.pisowisefinal.database
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
 import com.example.pisowisefinal.models.Expense
-
 
 class ExpenseDAO(context: Context) {
     private val dbHelper = ExpenseDatabaseHelper(context)
@@ -36,7 +34,6 @@ class ExpenseDAO(context: Context) {
             val date = cursor.getString(cursor.getColumnIndexOrThrow(ExpenseDatabaseHelper.COLUMN_DATE))
             val note = cursor.getString(cursor.getColumnIndexOrThrow(ExpenseDatabaseHelper.COLUMN_NOTE))
 
-            // Use default values for missing fields
             val expense = Expense(id, category, date, amount, "", "", note ?: "")
             expenseList.add(expense)
         }
@@ -46,8 +43,6 @@ class ExpenseDAO(context: Context) {
         return expenseList
     }
 
-
-    // Update an expense
     fun updateExpense(id: Int, amount: Double, category: String, date: String, note: String?): Int {
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
@@ -61,7 +56,6 @@ class ExpenseDAO(context: Context) {
         return result
     }
 
-    // Delete an expense
     fun deleteExpense(id: Int): Int {
         val db = dbHelper.writableDatabase
         val result = db.delete(ExpenseDatabaseHelper.TABLE_EXPENSES, "${ExpenseDatabaseHelper.COLUMN_ID} = ?", arrayOf(id.toString()))

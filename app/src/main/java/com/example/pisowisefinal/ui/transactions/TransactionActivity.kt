@@ -4,11 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.ImageButton
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -52,7 +48,7 @@ class TransactionActivity : AppCompatActivity() {
         transactionAdapter = TransactionAdapter(allTransactions)
         recyclerView.adapter = transactionAdapter
 
-        // Setup month filter
+
         val months = listOf(
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
@@ -60,6 +56,9 @@ class TransactionActivity : AppCompatActivity() {
         val monthAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, months)
         monthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerMonth.adapter = monthAdapter
+
+        val currentMonthIndex = Calendar.getInstance().get(Calendar.MONTH)
+        spinnerMonth.setSelection(currentMonthIndex)
 
         spinnerMonth.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -75,9 +74,11 @@ class TransactionActivity : AppCompatActivity() {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
+
+        // ✅ Automatically filter transactions for the current month on load
+        filterTransactionsByMonth(currentMonthIndex + 1)
     }
 
-    // ✅ FIXED: Only One `filterTransactionsByMonth()` Function
     private fun filterTransactionsByMonth(month: Int) {
         val allTransactions = dbHelper.getAllExpenses()
         val filteredTransactions = allTransactions.filter {
@@ -96,11 +97,9 @@ class TransactionActivity : AppCompatActivity() {
         Log.d("TransactionActivity", "Filtered Transactions for month $month: $filteredTransactions")
         transactionAdapter.updateList(filteredTransactions)
 
-        // Fetch total income & expense for selected month
         val (totalIncome, totalExpense) = dbHelper.getTotalIncomeAndExpenseForMonth(month)
         val totalBalance = totalIncome - totalExpense
 
-        // Update UI
         txtTotalIncome.text = "₱${String.format("%.2f", totalIncome)}"
         txtTotalExpense.text = "-₱${String.format("%.2f", totalExpense)}"
         txtTotalBalance.text = "₱${String.format("%.2f", totalBalance)}"
