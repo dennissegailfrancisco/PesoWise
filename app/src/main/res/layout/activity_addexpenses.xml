@@ -87,10 +87,21 @@
                     android:id="@+id/textView3"
                     android:layout_width="44dp"
                     android:layout_height="20dp"
-                    android:layout_marginStart="52dp"
-                    android:layout_marginTop="60dp"
+                    android:layout_marginStart="44dp"
+                    android:layout_marginTop="64dp"
                     android:fontFamily="@font/poppins"
                     android:text="Date"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView18"
+                    android:layout_width="164dp"
+                    android:layout_height="22dp"
+                    android:layout_marginStart="36dp"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Transaction Type : "
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -218,6 +229,18 @@
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+                <Spinner
+                    android:id="@+id/spinner2"
+                    android:layout_width="131dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="46dp"
+                    android:layout_marginTop="13dp"
+                    android:layout_marginEnd="31dp"
+                    android:background="#DFF7E2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/textView18"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -225,12 +248,12 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="170dp"
-        android:layout_height="36dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="291dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="24dp"
         android:fontFamily="@font/poppins_bold"
-        android:text="Add Expenses"
+        android:text="Add  Income / Expenses"
         android:textAlignment="center"
         android:textColor="#1E2E0D"
         android:textSize="20sp"
