@@ -59,11 +59,11 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun setListeners() {
-        findViewById<Button>(R.id.btnAddTransaction).setOnClickListener {
+        findViewById<ImageButton>(R.id.btnAddTransaction).setOnClickListener {
             startActivity(Intent(this, AddExpensesActivity::class.java))
         }
 
-        findViewById<Button>(R.id.btnViewTransactions).setOnClickListener {
+        findViewById<ImageButton>(R.id.btnViewTransactions).setOnClickListener {
             startActivity(Intent(this, TransactionActivity::class.java))
         }
     }
