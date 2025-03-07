@@ -21,6 +21,26 @@ class TransactionAdapter(
     private val onItemClick: (Expense) -> Unit
 ) : RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
 
+
+    private val categoryIcons = mapOf(
+        "Food" to R.drawable.foodicon,
+        "Shopping" to R.drawable.shopping,
+        "Grocery" to R.drawable.grocery,
+        "Rent" to R.drawable.rent,
+        "Transport" to R.drawable.transpo,
+        "Bills" to R.drawable.bills,
+        "Entertainment" to R.drawable.entertainment,
+        "Other Expense" to R.drawable.other_exp,
+
+        "Salary" to R.drawable.salary,
+        "Freelancing" to R.drawable.freelancing,
+        "Investments" to R.drawable.investment,
+        "Gifts" to R.drawable.gift,
+        "Other income" to R.drawable.other_income,
+
+
+        )
+
     class TransactionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val icon: ImageView = view.findViewById(R.id.icon)
         val category: TextView = view.findViewById(R.id.textCategory)
@@ -43,12 +63,17 @@ class TransactionAdapter(
         holder.date.text = expense.date
         holder.type.text = expense.transactionType
 
+        // Format amount with sign for expense or income
         val formattedAmount = String.format("%.2f", abs(expense.amount))
         holder.amount.text = if (expense.transactionType == Constants.TYPE_EXPENSE) {
             "- ₱$formattedAmount"
         } else {
             "+ ₱$formattedAmount"
         }
+
+        // Set the category icon dynamically
+        val iconResource = categoryIcons[expense.category] ?: R.drawable.ic_placeholder
+        holder.icon.setImageResource(iconResource)
 
         // Handle item click
         holder.itemView.setOnClickListener { onItemClick(expense) }
@@ -61,7 +86,6 @@ class TransactionAdapter(
 
     override fun getItemCount(): Int = expenses.size
 
-    // Show confirmation dialog for deleting an expense
     private fun showDeleteDialog(context: Context, position: Int) {
         AlertDialog.Builder(context).apply {
             setTitle(Constants.ALERT_DIALOG_TITLE)
@@ -74,8 +98,6 @@ class TransactionAdapter(
         }
     }
 
-
-    // Function to delete item
     private fun deleteItem(position: Int) {
         val expense = expenses[position]
         if (expense.id > 0 && dbHelper.deleteExpense(expense.id)) {
@@ -85,7 +107,6 @@ class TransactionAdapter(
         }
     }
 
-    // Update the transaction list
     fun updateList(newList: List<Expense>) {
         expenses.clear()
         expenses.addAll(newList)
