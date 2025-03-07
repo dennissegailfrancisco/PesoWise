@@ -8,16 +8,20 @@
     <!-- Icon -->
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:padding="10dp"
         android:src="@drawable/ic_placeholder" />  <!-- Placeholder icon -->
 
     <!-- Transaction Details -->
 
+    <!-- Spacer for proper distribution -->
+
     <LinearLayout
         android:layout_width="120dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
         android:orientation="vertical">
 
         <TextView
@@ -27,7 +31,7 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:text="Food"
-            android:textSize="14sp" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/textDate"
@@ -36,10 +40,8 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:text="8:30 AM - April 15"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
     </LinearLayout>
-
-    <!-- Spacer for proper distribution -->
 
     <LinearLayout
         android:layout_width="0dp"
@@ -56,6 +58,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
+        android:lines="1"
+        android:maxLines="1"
+        android:nestedScrollingEnabled="true"
+        android:singleLine="true"
         android:text="- ₱674.40"
         android:textSize="16sp"
         android:textStyle="bold" />

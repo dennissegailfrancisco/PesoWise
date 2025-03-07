@@ -17,6 +17,10 @@ import com.example.pisowisefinal.ui.dashboards.MainActivity
 import com.example.pisowisefinal.utils.Constants
 import java.text.SimpleDateFormat
 import java.util.*
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
+
 
 class TransactionActivity : AppCompatActivity() {
 
@@ -98,10 +102,14 @@ class TransactionActivity : AppCompatActivity() {
         view.findViewById<TextView>(R.id.tvTransactionMessage).text = expense.message
         view.findViewById<TextView>(R.id.tvTransactionType).text = expense.transactionType
 
-        // Use Constants for the icon
+
         val iconCard = view.findViewById<ImageView>(R.id.iconCard)
         val iconResId = Constants.categoryIcons[expense.category] ?: R.drawable.ic_placeholder
-        iconCard.setImageResource(iconResId)
+
+        Glide.with(this)
+            .load(iconResId)
+            .transform(RoundedCorners(30))
+            .into(iconCard)
 
         view.findViewById<ImageButton>(R.id.backButton4).setOnClickListener { dialog.dismiss() }
 

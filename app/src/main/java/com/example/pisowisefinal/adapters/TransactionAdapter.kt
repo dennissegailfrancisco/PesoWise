@@ -9,6 +9,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.pisowisefinal.R
 import com.example.pisowisefinal.database.DatabaseHelper
 import com.example.pisowisefinal.models.Expense
@@ -50,10 +52,14 @@ class TransactionAdapter(
         }
 
         val iconResource = Constants.categoryIcons[expense.category] ?: R.drawable.ic_placeholder
-        holder.icon.setImageResource(iconResource)
+
+
+        Glide.with(holder.itemView.context)
+            .load(iconResource)
+            .transform(RoundedCorners(35))
+            .into(holder.icon)
 
         holder.itemView.setOnClickListener { onItemClick(expense) }
-
         holder.deleteButton.setOnClickListener {
             showDeleteDialog(holder.itemView.context, position)
         }

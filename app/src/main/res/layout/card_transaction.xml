@@ -8,7 +8,6 @@
     android:background="#F1FFF3"
     android:foregroundGravity="center_vertical|center"
     android:padding="16dp"
-    app:cardCornerRadius="40dp"
     app:cardElevation="8dp"
     app:layout_anchorGravity="center|center_vertical">
 
@@ -23,9 +22,10 @@
             android:layout_height="56dp"
             android:layout_marginStart="48dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="47dp"
+            android:layout_marginEnd="48dp"
             android:paddingTop="8dp"
-            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor "
+            android:text="message"
+            android:textAlignment="center"
             android:textColor="#0E3E3E"
             android:textSize="15sp"
             android:textStyle="bold"
@@ -37,8 +37,8 @@
             android:id="@+id/tvTransactionType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="68dp"
-            android:layout_marginEnd="50dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginEnd="68dp"
             android:paddingTop="8dp"
             android:text="Expenses"
             android:textColor="#0E3E3E"
@@ -51,27 +51,35 @@
             android:id="@+id/tvCategory2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="21dp"
+            android:layout_marginStart="120dp"
             android:layout_marginTop="115dp"
+            android:layout_marginEnd="120dp"
             android:paddingTop="8dp"
             android:text="Amount:"
             android:textColor="#0E3E3E"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/tvTransactionAmount"
-            app:layout_constraintStart_toEndOf="@+id/iconCard"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvTransactionAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="80dp"
+            android:layout_marginStart="61dp"
             android:layout_marginTop="4dp"
-            android:text="PHP 2589.00"
+            android:layout_marginEnd="61dp"
+            android:width="250dp"
+            android:nestedScrollingEnabled="true"
+            android:singleLine="true"
+            android:text="PHP 258.00"
+            android:textAlignment="center"
             android:textColor="#0E3E3E"
             android:textSize="40sp"
             android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvCategory2" />
 
@@ -126,14 +134,16 @@
             android:id="@+id/tvTransactionTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="100dp"
             android:layout_marginTop="18dp"
-            android:layout_marginEnd="52dp"
+            android:layout_marginEnd="53dp"
             android:paddingTop="8dp"
             android:text="Monthy Stock"
             android:textColor="#0E3E3E"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tvCategory8"
             app:layout_constraintTop_toBottomOf="@+id/tvTransactionCategory" />
 
         <TextView
@@ -194,16 +204,30 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvTransactionMessage" />
 
-        <ImageView
-            android:id="@+id/iconCard"
-            android:layout_width="134dp"
-            android:layout_height="146dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView4"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="42dp"
+            android:layout_marginEnd="13dp"
+            app:cardCornerRadius="30dp"
+            app:cardElevation="4dp"
+            app:layout_constraintEnd_toStartOf="@+id/tvCategory2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/food"
-            tools:srcCompat="@drawable/food" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iconCard"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:adjustViewBounds="true"
+                android:cropToPadding="true"
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@drawable/foodicon" />
+        </androidx.cardview.widget.CardView>
 
         <ImageButton
             android:id="@+id/backButton4"

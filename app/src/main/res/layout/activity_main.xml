@@ -136,6 +136,8 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="421dp"
                 android:layout_height="107dp"
+                android:layout_marginStart="1dp"
+                android:layout_marginEnd="1dp"
                 android:layout_marginBottom="16dp"
                 app:cardCornerRadius="30dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -164,10 +166,10 @@
                     <ImageButton
                         android:id="@+id/btnAddTransaction"
                         android:layout_width="88dp"
-                        android:layout_height="69dp"
+                        android:layout_height="88dp"
                         android:layout_marginStart="24dp"
                         android:layout_marginEnd="20dp"
-                        android:layout_marginBottom="32dp"
+                        android:layout_marginBottom="20dp"
                         android:background="@drawable/add"
 
                         android:backgroundTintMode="add"
@@ -178,9 +180,9 @@
                     <ImageButton
                         android:id="@+id/btnViewTransactions"
                         android:layout_width="84dp"
-                        android:layout_height="72dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginBottom="28dp"
+                        android:layout_height="84dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginBottom="20dp"
                         android:background="@drawable/transaction"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/btnAddTransaction" />
