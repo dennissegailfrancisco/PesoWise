@@ -164,7 +164,7 @@
         android:layout_height="650dp"
         android:layout_marginStart="1dp"
         android:layout_marginTop="14dp"
-        android:layout_marginBottom="-10dp"
+        android:layout_marginBottom="20dp"
         app:cardBackgroundColor="#DFF7E2"
         app:cardCornerRadius="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
