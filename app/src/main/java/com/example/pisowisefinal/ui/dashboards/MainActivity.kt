@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -143,11 +144,17 @@ class MainActivity : AppCompatActivity() {
         val dialog = AlertDialog.Builder(this).setView(view).create()
 
         view.findViewById<TextView>(R.id.tvTransactionTitle).text = expense.title
-        view.findViewById<TextView>(R.id.tvTransactionAmount).text = getString(R.string.transaction_amount, String.format("%.2f", expense.amount))
+        view.findViewById<TextView>(R.id.tvTransactionAmount).text =
+            getString(R.string.transaction_amount, String.format("%.2f", expense.amount))
         view.findViewById<TextView>(R.id.tvTransactionCategory).text = expense.category
         view.findViewById<TextView>(R.id.tvTransactionDate).text = expense.date
         view.findViewById<TextView>(R.id.tvTransactionMessage).text = expense.message
         view.findViewById<TextView>(R.id.tvTransactionType).text = expense.transactionType
+
+        // Use Constants for the icon
+        val iconCard = view.findViewById<ImageView>(R.id.iconCard)
+        val iconResId = Constants.categoryIcons[expense.category] ?: R.drawable.ic_placeholder
+        iconCard.setImageResource(iconResId)
 
         view.findViewById<ImageButton>(R.id.backButton4).setOnClickListener { dialog.dismiss() }
 
@@ -161,6 +168,7 @@ class MainActivity : AppCompatActivity() {
 
         dialog.show()
     }
+
 
     private fun updateTransactionList() {
         val allTransactions = dbHelper.getAllExpenses()

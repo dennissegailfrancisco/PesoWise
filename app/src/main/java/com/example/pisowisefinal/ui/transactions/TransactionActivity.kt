@@ -61,12 +61,7 @@ class TransactionActivity : AppCompatActivity() {
     }
 
     private fun setupMonthSpinner() {
-        val months = listOf(
-            Constants.MONTH_JANUARY, Constants.MONTH_FEBRUARY, Constants.MONTH_MARCH,
-            Constants.MONTH_APRIL, Constants.MONTH_MAY, Constants.MONTH_JUNE,
-            Constants.MONTH_JULY, Constants.MONTH_AUGUST, Constants.MONTH_SEPTEMBER,
-            Constants.MONTH_OCTOBER, Constants.MONTH_NOVEMBER, Constants.MONTH_DECEMBER
-        )
+        val months = Constants.MONTHS
         val monthAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, months)
         monthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerMonth.adapter = monthAdapter
@@ -92,33 +87,27 @@ class TransactionActivity : AppCompatActivity() {
     }
 
     private fun showTransactionPopup(expense: Expense) {
-        val view = LayoutInflater.from(this).inflate(R.layout.card_transaction, null)
+        val view = layoutInflater.inflate(R.layout.card_transaction, null)
         val dialog = AlertDialog.Builder(this).setView(view).create()
 
-        val tvTitle = view.findViewById<TextView>(R.id.tvTransactionTitle)
-        val tvAmount = view.findViewById<TextView>(R.id.tvTransactionAmount)
-        val tvCategory = view.findViewById<TextView>(R.id.tvTransactionCategory)
-        val tvDate = view.findViewById<TextView>(R.id.tvTransactionDate)
-        val tvMessage = view.findViewById<TextView>(R.id.tvTransactionMessage)
-        val tvType = view.findViewById<TextView>(R.id.tvTransactionType)
-        val btnDelete = view.findViewById<Button>(R.id.btnDeleteTransaction)
-        val btnClose = view.findViewById<ImageButton>(R.id.backButton4)
+        view.findViewById<TextView>(R.id.tvTransactionTitle).text = expense.title
+        view.findViewById<TextView>(R.id.tvTransactionAmount).text =
+            getString(R.string.transaction_amount, String.format("%.2f", expense.amount))
+        view.findViewById<TextView>(R.id.tvTransactionCategory).text = expense.category
+        view.findViewById<TextView>(R.id.tvTransactionDate).text = expense.date
+        view.findViewById<TextView>(R.id.tvTransactionMessage).text = expense.message
+        view.findViewById<TextView>(R.id.tvTransactionType).text = expense.transactionType
 
-        tvTitle.text = expense.title
-        tvAmount.text = getString(R.string.transaction_amount, String.format("%.2f", expense.amount))
-        tvCategory.text = getString(R.string.transaction_category, expense.category)
-        tvDate.text = getString(R.string.transaction_date, expense.date)
-        tvMessage.text = getString(R.string.transaction_message, expense.message)
-        tvType.text = getString(R.string.transaction_type, expense.transactionType)
+        // Use Constants for the icon
+        val iconCard = view.findViewById<ImageView>(R.id.iconCard)
+        val iconResId = Constants.categoryIcons[expense.category] ?: R.drawable.ic_placeholder
+        iconCard.setImageResource(iconResId)
 
+        view.findViewById<ImageButton>(R.id.backButton4).setOnClickListener { dialog.dismiss() }
 
-
-        btnClose.setOnClickListener { dialog.dismiss() }
-
-        btnDelete.setOnClickListener {
+        view.findViewById<Button>(R.id.btnDeleteTransaction).setOnClickListener {
             dbHelper.deleteExpense(expense.id)
             updateTransactionList()
-            filterTransactionsByMonth(spinnerMonth.selectedItemPosition + 1)
             dialog.dismiss()
             Toast.makeText(this, "Transaction Deleted", Toast.LENGTH_SHORT).show()
         }
@@ -147,7 +136,6 @@ class TransactionActivity : AppCompatActivity() {
         txtTotalIncome.text = getString(R.string.total_income, String.format("%.2f", totalIncome))
         txtTotalExpense.text = getString(R.string.total_expense, String.format("%.2f", totalExpense))
         txtTotalBalance.text = getString(R.string.total_balance, String.format("%.2f", totalBalance))
-
     }
 
     private fun updateTransactionList() {
