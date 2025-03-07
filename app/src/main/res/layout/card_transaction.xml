@@ -18,7 +18,7 @@
         android:background="#E8F4EA">
 
         <TextView
-            android:id="@+id/tvCategory10"
+            android:id="@+id/tvTransactionMessage"
             android:layout_width="285dp"
             android:layout_height="56dp"
             android:layout_marginStart="48dp"
@@ -34,7 +34,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tvCategory9" />
 
         <TextView
-            android:id="@+id/tvCategory3"
+            android:id="@+id/tvTransactionType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="106dp"
@@ -60,12 +60,12 @@
             android:textColor="#0E3E3E"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/tvAmount"
+            app:layout_constraintBottom_toTopOf="@+id/tvTransactionAmount"
             app:layout_constraintStart_toEndOf="@+id/imageView3"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvAmount"
+            android:id="@+id/tvTransactionAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="80dp"
@@ -89,10 +89,10 @@
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvAmount" />
+            app:layout_constraintTop_toBottomOf="@+id/tvTransactionAmount" />
 
         <TextView
-            android:id="@+id/tvCategory"
+            android:id="@+id/tvTransactionDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="110dp"
@@ -106,10 +106,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/tvCategory6"
-            app:layout_constraintTop_toBottomOf="@+id/tvAmount" />
+            app:layout_constraintTop_toBottomOf="@+id/tvTransactionAmount" />
 
         <TextView
-            android:id="@+id/tvCategory4"
+            android:id="@+id/tvTransactionCategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="81dp"
@@ -122,10 +122,10 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tvCategory7"
-            app:layout_constraintTop_toBottomOf="@+id/tvCategory" />
+            app:layout_constraintTop_toBottomOf="@+id/tvTransactionDate" />
 
         <TextView
-            android:id="@+id/tvCategory5"
+            android:id="@+id/tvTransactionTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
@@ -136,7 +136,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvCategory4" />
+            app:layout_constraintTop_toBottomOf="@+id/tvTransactionCategory" />
 
         <TextView
             android:id="@+id/tvCategory8"
@@ -181,7 +181,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tvCategory8" />
 
         <Button
-            android:id="@+id/btnDelete"
+            android:id="@+id/btnDeleteTransaction"
             android:layout_width="159dp"
             android:layout_height="56dp"
             android:layout_marginStart="112dp"
@@ -194,7 +194,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvCategory10" />
+            app:layout_constraintTop_toBottomOf="@+id/tvTransactionMessage" />
 
         <ImageView
             android:id="@+id/imageView3"
@@ -208,9 +208,9 @@
             tools:srcCompat="@drawable/food" />
 
         <ImageButton
-            android:id="@+id/imageButton2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/backButton4"
+            android:layout_width="54dp"
+            android:layout_height="45dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:background="#E7F3E9"
