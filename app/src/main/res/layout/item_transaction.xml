@@ -14,6 +14,7 @@
         android:src="@drawable/ic_placeholder" />  <!-- Placeholder icon -->
 
     <!-- Transaction Details -->
+
     <LinearLayout
         android:layout_width="120dp"
         android:layout_height="wrap_content"
@@ -38,14 +39,27 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="216dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="horizontal"
-        android:paddingStart="10dp">
+    <!-- Spacer for proper distribution -->
 
-    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <!-- Transaction Type -->
+
+    <!-- Transaction Amount -->
+
+    <TextView
+        android:id="@+id/textAmount"
+        android:layout_width="91dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="- ₱674.40"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
 
     <TextView
         android:id="@+id/textType"
@@ -57,14 +71,12 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/textAmount"
-        android:layout_width="91dp"
+    <include
+        android:id="@+id/cardTransaction"
+        layout="@layout/card_transaction"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="- ₱674.40"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:visibility="gone" />
+
 
 </LinearLayout>

@@ -6,25 +6,22 @@
         <item>Expense</item>
     </string-array>
 
-    <string-array name="categories_array">
-
-        <item>Food</item>
-        <item>Rent</item>
-        <item>Transportation</item>
-        <item>Entertainment</item>
-        <item>Shopping</item>
-        <item>Health</item>
-        <item>Education</item>
-        <item>Utilities</item>
-        <item>Insurance</item>
-        <item>Others</item>
-
+    <string-array name="income_categories">
         <item>Salary</item>
-        <item>Freelance</item>
+        <item>Freelancing</item>
         <item>Investments</item>
-        <item>Business</item>
         <item>Gifts</item>
         <item>Other Income</item>
+    </string-array>
+
+    <string-array name="expense_categories">
+        <item>Food</item>
+        <item>Shopping</item>
+        <item>Rent</item>
+        <item>Transport</item>
+        <item>Bills</item>
+        <item>Entertainment</item>
+        <item>Other Expense</item>
     </string-array>
 
     <string-array name="months_array">
@@ -42,5 +39,19 @@
         <item>December</item>
     </string-array>
 
+    <string name="transaction_amount">Php %1$s</string>
+    <string name="transaction_category">%1$s</string>
+    <string name="transaction_date"> %1$s</string>
+    <string name="transaction_message">Message:%1$s</string>
+    <string name="transaction_type">Type:%1$s</string>
+
+    <string name="total_balance">Php %1$s</string>
+    <string name="total_income">Php %1$s</string>
+    <string name="total_expense">Php %1$s</string>
+
+    <string name="savings_last_week">Php %1$s</string>
+    <string name="food_expense_last_week">Php %1$s</string>
 
 </resources>
+
+

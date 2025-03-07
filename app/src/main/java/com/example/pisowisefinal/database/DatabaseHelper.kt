@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.pisowisefinal.models.Expense
+import com.example.pisowisefinal.utils.Constants
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -12,14 +13,12 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         private const val DATABASE_NAME = "pesowise.db"
         private const val DATABASE_VERSION = 3  // Increase the version
 
-
-
         const val TABLE_EXPENSES = "expenses"
         const val COLUMN_ID = "id"
         const val COLUMN_CATEGORY = "category"
         const val COLUMN_DATE = "date"
         const val COLUMN_AMOUNT = "amount"
-        const val COLUMN_TRANSACTION_TYPE = "transaction_type"  // Add this
+        const val COLUMN_TRANSACTION_TYPE = "transaction_type"
         const val COLUMN_TITLE = "title"
         const val COLUMN_NOTE = "note"
     }
@@ -84,15 +83,23 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return expenseList
     }
 
+    fun deleteExpense(id: Int?): Boolean {
+        if (id == null) return false  // Ensure ID is not null
+        val db = this.writableDatabase
+        val result = db.delete(TABLE_EXPENSES, "$COLUMN_ID=?", arrayOf(id.toString()))
+        db.close()
+        return result > 0
+    }
+
     fun getTotalIncomeAndExpenseForMonth(month: Int): Pair<Double, Double> {
         val db = readableDatabase
         val datePattern = "%-${String.format("%02d", month)}-%" // Matches 'YYYY-MM-%'
 
-        val incomeQuery = "SELECT SUM(amount) FROM $TABLE_EXPENSES WHERE $COLUMN_TRANSACTION_TYPE = 'Income' AND $COLUMN_DATE LIKE ?"
-        val expenseQuery = "SELECT SUM(amount) FROM $TABLE_EXPENSES WHERE $COLUMN_TRANSACTION_TYPE = 'Expense' AND $COLUMN_DATE LIKE ?"
+        val incomeQuery = "SELECT SUM(amount) FROM $TABLE_EXPENSES WHERE $COLUMN_TRANSACTION_TYPE = ? AND $COLUMN_DATE LIKE ?"
+        val expenseQuery = "SELECT SUM(amount) FROM $TABLE_EXPENSES WHERE $COLUMN_TRANSACTION_TYPE = ? AND $COLUMN_DATE LIKE ?"
 
-        val incomeCursor = db.rawQuery(incomeQuery, arrayOf(datePattern))
-        val expenseCursor = db.rawQuery(expenseQuery, arrayOf(datePattern))
+        val incomeCursor = db.rawQuery(incomeQuery, arrayOf(Constants.TYPE_INCOME, datePattern))
+        val expenseCursor = db.rawQuery(expenseQuery, arrayOf(Constants.TYPE_EXPENSE, datePattern))
 
         var totalIncome = 0.0
         var totalExpense = 0.0
@@ -110,5 +117,4 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
         return Pair(totalIncome, totalExpense)
     }
-
 }

@@ -5,6 +5,8 @@ import android.media.Image
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageButton
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,10 +36,8 @@ class MainActivity : AppCompatActivity() {
 
         dbHelper = DatabaseHelper(this)
 
-        // Find Views
-        val btnAddTransaction = findViewById<ImageButton>(R.id.btnAddTransaction)
-        val btnViewTransactions = findViewById<ImageButton>(R.id.btnViewTransactions)
-
+    private fun initViews() {
+        // Initialize Views
         tvTotalBalance = findViewById(R.id.tvTotalBalance)
         tvTotalExpenses = findViewById(R.id.tvTotalExpenses)
         tvSavingsLastWeek = findViewById(R.id.tvSavingsLastWeek)
@@ -46,11 +46,14 @@ class MainActivity : AppCompatActivity() {
 
         rvRecentTransactions.layoutManager = LinearLayoutManager(this)
 
-        btnAddTransaction.setOnClickListener {
+
+
+    private fun setListeners() {
+        findViewById<ImageButton>(R.id.btnAddTransaction).setOnClickListener {
             startActivity(Intent(this, AddExpensesActivity::class.java))
         }
 
-        btnViewTransactions.setOnClickListener {
+        findViewById<ImageButton>(R.id.btnViewTransactions).setOnClickListener {
             startActivity(Intent(this, TransactionActivity::class.java))
         }
     }
