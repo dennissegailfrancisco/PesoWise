@@ -13,7 +13,7 @@
         android:layout_height="650dp"
         android:layout_marginBottom="-40dp"
         android:minHeight="500dp"
-        app:cardBackgroundColor="#DFF7E2"
+        app:cardBackgroundColor="#DEF6E1"
         app:cardCornerRadius="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -86,6 +86,7 @@
                         android:id="@+id/tvFoodExpenseLastWeek"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="92dp"
                         android:layout_marginEnd="124dp"
                         android:layout_marginBottom="16dp"
                         android:fontFamily="@font/poppins_bold"
@@ -93,6 +94,7 @@
                         android:textColor="#052224"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView12"
                         app:layout_constraintVertical_bias="0.0" />
 
@@ -112,18 +114,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
                 android:layout_marginTop="48dp"
+                android:fontFamily="@font/poppins_bold"
                 android:text="Recent Transactions"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvRecentTransactions"
-                android:layout_width="417dp"
-                android:layout_height="278dp"
-                android:layout_marginBottom="144dp"
+                android:layout_width="385dp"
+                android:layout_height="281dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="148dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="421dp"
@@ -133,46 +141,50 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.333"
-                app:layout_constraintStart_toStartOf="parent" >
+                app:layout_constraintStart_toStartOf="parent">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <Button
-                        android:id="@+id/button2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginBottom="40dp"
-                        android:text="home"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/btnAddTransaction"
-                        app:layout_constraintStart_toStartOf="parent" />
 
-                    <Button
+                    <ImageButton
+                        android:id="@+id/button2"
+                        android:layout_width="66dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="75dp"
+                        android:layout_marginBottom="36dp"
+                        android:background="@drawable/home"
+                        android:textAlignment="center"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:rippleColor="#000000"
+                        app:strokeColor="#000000" />
+
+                    <ImageButton
                         android:id="@+id/btnAddTransaction"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="40dp"
-                        android:text="add"
+                        android:layout_width="88dp"
+                        android:layout_height="69dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginBottom="32dp"
+                        android:background="@drawable/add"
+
+                        android:backgroundTintMode="add"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/btnViewTransactions"
-                        app:layout_constraintHorizontal_bias="0.906"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintStart_toEndOf="@+id/button2" />
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/btnViewTransactions"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="15dp"
-                        android:layout_marginBottom="40dp"
-                        android:text="transac"
+                        android:layout_width="84dp"
+                        android:layout_height="72dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginBottom="28dp"
+                        android:background="@drawable/transaction"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.827"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintStart_toEndOf="@+id/btnAddTransaction" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
@@ -246,11 +258,14 @@
             <TextView
                 android:id="@+id/textView6"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
                 android:fontFamily="@font/poppins"
-                android:text="🡥 Total Balance"
+                android:foregroundGravity="center"
+                android:gravity="center_horizontal"
+                android:text="Total Balance"
                 android:textAlignment="center"
-                android:textSize="12sp" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/tvTotalBalance"
@@ -271,16 +286,20 @@
             <TextView
                 android:id="@+id/textView8"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="28dp"
+                android:drawableLeft="@android:drawable/status_bar_item_app_background"
+                android:drawableTint="#070707"
                 android:fontFamily="@font/poppins"
-                android:text="🡦 Total Expenses"
+                android:text="Total Expenses"
                 android:textAlignment="center"
-                android:textSize="12sp" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/tvTotalExpenses"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawableLeft="@android:drawable/status_bar_item_app_background"
+                android:drawableTint="#000000"
                 android:fontFamily="@font/poppins_bold"
                 android:text="- Php 1,090"
                 android:textAlignment="center"

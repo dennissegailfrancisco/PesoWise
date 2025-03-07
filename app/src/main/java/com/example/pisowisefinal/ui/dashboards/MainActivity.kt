@@ -1,8 +1,10 @@
 package com.example.pisowisefinal.ui.dashboards
 
 import android.content.Intent
+import android.media.Image
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,8 +35,8 @@ class MainActivity : AppCompatActivity() {
         dbHelper = DatabaseHelper(this)
 
         // Find Views
-        val btnAddTransaction = findViewById<Button>(R.id.btnAddTransaction)
-        val btnViewTransactions = findViewById<Button>(R.id.btnViewTransactions)
+        val btnAddTransaction = findViewById<ImageButton>(R.id.btnAddTransaction)
+        val btnViewTransactions = findViewById<ImageButton>(R.id.btnViewTransactions)
 
         tvTotalBalance = findViewById(R.id.tvTotalBalance)
         tvTotalExpenses = findViewById(R.id.tvTotalExpenses)
