@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         dbHelper = DatabaseHelper(this)
         initViews()
+        setupRecyclerView()
         setListeners()
     }
 
@@ -45,8 +46,12 @@ class MainActivity : AppCompatActivity() {
         tvFoodExpenseLastWeek = findViewById(R.id.tvFoodExpenseLastWeek)
         rvRecentTransactions = findViewById(R.id.rvRecentTransactions)
         progressBar = findViewById(R.id.progressBar2)
+    }
 
+    private fun setupRecyclerView() {
         rvRecentTransactions.layoutManager = LinearLayoutManager(this)
+        transactionAdapter = TransactionAdapter(mutableListOf(), dbHelper) { showTransactionPopup(it) }
+        rvRecentTransactions.adapter = transactionAdapter
     }
 
     private fun setListeners() {
@@ -66,10 +71,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateDashboard() {
         val transactions = dbHelper.getAllExpenses()
-        val totalIncome =
-            transactions.sumOf { if (it.transactionType == Constants.TYPE_INCOME) it.amount else 0.0 }
-        val totalExpense =
-            transactions.sumOf { if (it.transactionType == Constants.TYPE_EXPENSE) it.amount else 0.0 }
+        val totalIncome = transactions.sumOf { if (it.transactionType == Constants.TYPE_INCOME) it.amount else 0.0 }
+        val totalExpense = transactions.sumOf { if (it.transactionType == Constants.TYPE_EXPENSE) it.amount else 0.0 }
         val totalBalance = totalIncome - totalExpense
 
         tvTotalBalance.text = getString(R.string.total_balance, String.format("%.2f", totalBalance))
@@ -97,13 +100,11 @@ class MainActivity : AppCompatActivity() {
         val dateFormat = SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault())
 
         val lastWeekTransactions = dbHelper.getAllExpenses().filter {
-            runCatching { dateFormat.parse(it.date)?.after(lastWeekDate) ?: false }.getOrDefault(false)
+            runCatching { dateFormat.parse(it.date)?.after(lastWeekDate) ?: false }.getOrElse { false }
         }
 
-        val totalLastWeekIncome =
-            lastWeekTransactions.sumOf { if (it.transactionType == Constants.TYPE_INCOME) it.amount else 0.0 }
-        val totalLastWeekExpense =
-            lastWeekTransactions.sumOf { if (it.transactionType == Constants.TYPE_EXPENSE) it.amount else 0.0 }
+        val totalLastWeekIncome = lastWeekTransactions.sumOf { if (it.transactionType == Constants.TYPE_INCOME) it.amount else 0.0 }
+        val totalLastWeekExpense = lastWeekTransactions.sumOf { if (it.transactionType == Constants.TYPE_EXPENSE) it.amount else 0.0 }
         val savingsLastWeek = totalLastWeekIncome - totalLastWeekExpense
 
         val foodExpensesLastWeek = lastWeekTransactions
@@ -116,44 +117,45 @@ class MainActivity : AppCompatActivity() {
 
     private fun displayRecentTransactions(transactions: List<Expense>) {
         val recentTransactions = transactions.sortedByDescending { it.date }.take(Constants.RECENT_TRANSACTIONS_LIMIT)
-
-        if (!::transactionAdapter.isInitialized) {
-            transactionAdapter = TransactionAdapter(recentTransactions.toMutableList(), dbHelper) { showTransactionPopup(it) }
-            rvRecentTransactions.adapter = transactionAdapter
-        } else {
-            transactionAdapter.updateList(recentTransactions)
-        }
+        transactionAdapter.updateList(recentTransactions.toMutableList())
+        transactionAdapter.notifyDataSetChanged()
     }
 
     private fun showTransactionPopup(expense: Expense) {
         val view = layoutInflater.inflate(R.layout.card_transaction, null)
         val dialog = AlertDialog.Builder(this).setView(view).create()
 
-        view.findViewById<TextView>(R.id.tvTransactionTitle).text = expense.title
-        view.findViewById<TextView>(R.id.tvTransactionAmount).text =
-            getString(R.string.transaction_amount, String.format("%.2f", expense.amount))
-        view.findViewById<TextView>(R.id.tvTransactionCategory).text = expense.category
-        view.findViewById<TextView>(R.id.tvTransactionDate).text = expense.date
-        view.findViewById<TextView>(R.id.tvTransactionMessage).text = expense.message
-        view.findViewById<TextView>(R.id.tvTransactionType).text = expense.transactionType
+        with(view) {
+            findViewById<TextView>(R.id.tvTransactionTitle).text = expense.title
+            findViewById<TextView>(R.id.tvTransactionAmount).text = getString(R.string.transaction_amount, String.format("%.2f", expense.amount))
+            findViewById<TextView>(R.id.tvTransactionCategory).text = expense.category
+            findViewById<TextView>(R.id.tvTransactionDate).text = expense.date
+            findViewById<TextView>(R.id.tvTransactionMessage).text = expense.message
+            findViewById<TextView>(R.id.tvTransactionType).text = expense.transactionType
 
-        val iconResId = Constants.categoryIcons[expense.category] ?: R.drawable.ic_placeholder
-        view.findViewById<ImageView>(R.id.iconCard).setImageResource(iconResId)
+            val iconResId = Constants.categoryIcons[expense.category] ?: R.drawable.ic_placeholder
+            findViewById<ImageView>(R.id.iconCard).setImageResource(iconResId)
 
-        view.findViewById<ImageButton>(R.id.backButton4).setOnClickListener { dialog.dismiss() }
+            findViewById<ImageButton>(R.id.backButton4).setOnClickListener { dialog.dismiss() }
 
-        view.findViewById<Button>(R.id.btnDeleteTransaction).setOnClickListener {
-            dbHelper.deleteExpense(expense.id)
-            updateTransactionList()
-            updateDashboard()
-            dialog.dismiss()
-            Toast.makeText(this, "Transaction Deleted", Toast.LENGTH_SHORT).show()
+            findViewById<Button>(R.id.btnDeleteTransaction).setOnClickListener {
+                deleteTransaction(expense, dialog)
+            }
         }
 
         dialog.show()
     }
 
-    private fun updateTransactionList() {
-        displayRecentTransactions(dbHelper.getAllExpenses())
+    private fun deleteTransaction(expense: Expense, dialog: AlertDialog) {
+        dbHelper.deleteExpense(expense.id)
+
+        // Refresh transaction list properly
+        val updatedList = dbHelper.getAllExpenses().toMutableList()
+        transactionAdapter.updateList(updatedList)
+        transactionAdapter.notifyDataSetChanged()
+
+        updateDashboard()
+        dialog.dismiss()
+        Toast.makeText(this, "Transaction Deleted", Toast.LENGTH_SHORT).show()
     }
 }

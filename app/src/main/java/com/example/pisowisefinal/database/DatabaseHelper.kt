@@ -93,19 +93,20 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     }
 
     fun getTotalIncomeAndExpenseForMonth(month: Int): Pair<Double, Double> {
-        val datePattern = "%-${String.format("%02d", month)}-%"
+        val monthPattern = "-${String.format("%02d", month)}-"
         return readableDatabase.use { db ->
-            val income = db.rawQuery("SELECT SUM(amount) FROM $TABLE_EXPENSES WHERE $COLUMN_TRANSACTION_TYPE = ? AND $COLUMN_DATE LIKE ?",
-                arrayOf(Constants.TYPE_INCOME, datePattern)).use { cursor ->
+            val incomeQuery = "SELECT SUM(amount) FROM $TABLE_EXPENSES WHERE $COLUMN_TRANSACTION_TYPE = ? AND strftime('%m', $COLUMN_DATE) = ?"
+            val income = db.rawQuery(incomeQuery, arrayOf(Constants.TYPE_INCOME, String.format("%02d", month))).use { cursor ->
                 if (cursor.moveToFirst()) cursor.getDouble(0) else 0.0
             }
 
-            val expense = db.rawQuery("SELECT SUM(amount) FROM $TABLE_EXPENSES WHERE $COLUMN_TRANSACTION_TYPE = ? AND $COLUMN_DATE LIKE ?",
-                arrayOf(Constants.TYPE_EXPENSE, datePattern)).use { cursor ->
+            val expenseQuery = "SELECT SUM(amount) FROM $TABLE_EXPENSES WHERE $COLUMN_TRANSACTION_TYPE = ? AND strftime('%m', $COLUMN_DATE) = ?"
+            val expense = db.rawQuery(expenseQuery, arrayOf(Constants.TYPE_EXPENSE, String.format("%02d", month))).use { cursor ->
                 if (cursor.moveToFirst()) cursor.getDouble(0) else 0.0
             }
 
             Pair(income, expense)
         }
     }
+
 }
