@@ -38,24 +38,26 @@ class TransactionAdapter(
     }
 
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
-        val expense = expenses[position]
-        with(holder) {
-            category.text = expense.category
-            date.text = expense.date
-            type.text = expense.transactionType
+        if (position < expenses.size) {
+            val expense = expenses[position]
+            with(holder) {
+                category.text = expense.category
+                date.text = expense.date
+                type.text = expense.transactionType
 
-            val formattedAmount = "₱${String.format("%.2f", abs(expense.amount))}"
-            amount.text = if (expense.transactionType == Constants.TYPE_EXPENSE) "- $formattedAmount" else "+ $formattedAmount"
+                val formattedAmount = "₱${String.format("%.2f", abs(expense.amount))}"
+                amount.text = if (expense.transactionType == Constants.TYPE_EXPENSE) "- $formattedAmount" else "+ $formattedAmount"
 
-            Glide.with(itemView.context)
-                .load(Constants.categoryIcons[expense.category] ?: R.drawable.ic_placeholder)
-                .transform(RoundedCorners(35))
-                .placeholder(R.drawable.ic_placeholder)
-                .error(R.drawable.ic_placeholder)
-                .into(icon)
+                Glide.with(itemView.context)
+                    .load(Constants.categoryIcons[expense.category] ?: R.drawable.ic_placeholder)
+                    .transform(RoundedCorners(35))
+                    .placeholder(R.drawable.ic_placeholder)
+                    .error(R.drawable.ic_placeholder)
+                    .into(icon)
 
-            itemView.setOnClickListener { onItemClick(expense) }
-            deleteButton.setOnClickListener { showDeleteDialog(itemView.context, position) }
+                itemView.setOnClickListener { onItemClick(expense) }
+                deleteButton.setOnClickListener { showDeleteDialog(itemView.context, position) }
+            }
         }
     }
 
@@ -72,19 +74,19 @@ class TransactionAdapter(
     }
 
     private fun deleteItem(position: Int) {
-        val expense = expenses[position]
-        if (expense.id > 0 && dbHelper.deleteExpense(expense.id)) {
-            expenses.removeAt(position)
-            notifyItemRemoved(position)
-            notifyItemRangeChanged(position, expenses.size)
+        if (position in expenses.indices) {
+            val expense = expenses[position]
+            if (expense.id > 0 && dbHelper.deleteExpense(expense.id)) {
+                expenses.removeAt(position)
+                notifyItemRemoved(position)
+                notifyItemRangeChanged(position, expenses.size)
+            }
         }
     }
 
     fun updateList(newList: List<Expense>) {
-        expenses.apply {
-            clear()
-            addAll(newList)
-        }
-        notifyItemRangeChanged(0, expenses.size)
+        expenses.clear()
+        expenses.addAll(newList)
+        notifyDataSetChanged()
     }
 }

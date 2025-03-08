@@ -30,6 +30,8 @@ class TransactionActivity : AppCompatActivity() {
     private lateinit var txtTotalIncome: TextView
     private lateinit var txtTotalExpense: TextView
 
+    private var allTransactions: List<Expense> = emptyList()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transaction)
@@ -39,8 +41,7 @@ class TransactionActivity : AppCompatActivity() {
         setupMonthSpinner()
         setupButtons()
 
-        val currentMonthIndex = Calendar.getInstance().get(Calendar.MONTH) + 1
-        filterTransactionsByMonth(currentMonthIndex)
+        loadTransactions() // Load once to avoid repeated DB calls
     }
 
     private fun initUI() {
@@ -53,7 +54,7 @@ class TransactionActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        transactionAdapter = TransactionAdapter(dbHelper.getAllExpenses().toMutableList(), dbHelper, ::showTransactionPopup)
+        transactionAdapter = TransactionAdapter(mutableListOf(), dbHelper, ::showTransactionPopup)
         recyclerView.apply {
             layoutManager = LinearLayoutManager(this@TransactionActivity)
             adapter = transactionAdapter
@@ -88,12 +89,49 @@ class TransactionActivity : AppCompatActivity() {
         }
     }
 
+    private fun loadTransactions() {
+        allTransactions = dbHelper.getAllExpenses() // Fetch all transactions once
+        val currentMonthIndex = Calendar.getInstance().get(Calendar.MONTH) + 1
+        filterTransactionsByMonth(currentMonthIndex)
+    }
+
+    private fun filterTransactionsByMonth(month: Int) {
+        val transactions = allTransactions.filter { expense ->
+            parseDate(expense.date)?.let { date ->
+                val calendar = Calendar.getInstance().apply { time = date }
+                val expenseMonth = calendar.get(Calendar.MONTH) + 1
+                expenseMonth == month
+            } ?: false
+        }
+
+        transactionAdapter.updateList(transactions)
+
+        val selectedMonthName = Constants.MONTHS[month - 1] // Get the month name from the array
+        if (transactions.isEmpty()) {
+            showToast("No transactions found for $selectedMonthName.")
+        }
+
+        updateSummary(transactions, month)
+    }
+
+
+
+
+
+    private fun updateSummary(transactions: List<Expense>, month: Int) {
+        val (totalIncome, totalExpense) = dbHelper.getTotalIncomeAndExpenseForMonth(month)
+
+        txtTotalIncome.text = getString(R.string.total_income, String.format("%.2f", totalIncome))
+        txtTotalExpense.text = getString(R.string.total_expense, String.format("%.2f", totalExpense))
+        txtTotalBalance.text = getString(R.string.total_balance, String.format("%.2f", totalIncome - totalExpense))
+    }
+
     private fun generatePdf() {
         val selectedMonth = spinnerMonth.selectedItemPosition + 1
         val monthName = Constants.MONTHS[selectedMonth - 1]
         val fileName = "transactions_$monthName.pdf"
-
-        val transactions = getFilteredTransactions(selectedMonth)
+        val transactions = allTransactions.filter { parseDate(it.date)?.let { date ->
+            Calendar.getInstance().apply { time = date }.get(Calendar.MONTH) + 1 == selectedMonth } ?: false }
 
         if (transactions.isNotEmpty()) {
             PdfGenerator.generateTransactionPdf(this, transactions, fileName)
@@ -109,8 +147,7 @@ class TransactionActivity : AppCompatActivity() {
 
         with(view) {
             findViewById<TextView>(R.id.tvTransactionTitle).text = expense.title
-            findViewById<TextView>(R.id.tvTransactionAmount).text =
-                getString(R.string.transaction_amount, String.format("%.2f", expense.amount))
+            findViewById<TextView>(R.id.tvTransactionAmount).text = getString(R.string.transaction_amount, String.format("%.2f", expense.amount))
             findViewById<TextView>(R.id.tvTransactionCategory).text = expense.category
             findViewById<TextView>(R.id.tvTransactionDate).text = expense.date
             findViewById<TextView>(R.id.tvTransactionMessage).text = expense.message
@@ -122,10 +159,9 @@ class TransactionActivity : AppCompatActivity() {
                 .into(findViewById(R.id.iconCard))
 
             findViewById<ImageButton>(R.id.backButton4).setOnClickListener { dialog.dismiss() }
-
             findViewById<Button>(R.id.btnDeleteTransaction).setOnClickListener {
                 dbHelper.deleteExpense(expense.id)
-                updateTransactionList()
+                loadTransactions()
                 dialog.dismiss()
                 showToast("Transaction Deleted")
             }
@@ -134,34 +170,9 @@ class TransactionActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun filterTransactionsByMonth(month: Int) {
-        val transactions = getFilteredTransactions(month)
-        transactionAdapter.updateList(transactions)
-
-        val (totalIncome, totalExpense) = dbHelper.getTotalIncomeAndExpenseForMonth(month)
-        txtTotalIncome.text = getString(R.string.total_income, String.format("%.2f", totalIncome))
-        txtTotalExpense.text = getString(R.string.total_expense, String.format("%.2f", totalExpense))
-        txtTotalBalance.text = getString(R.string.total_balance, String.format("%.2f", totalIncome - totalExpense))
-    }
-
-    private fun getFilteredTransactions(month: Int): List<Expense> {
-        return dbHelper.getAllExpenses().filter {
-            parseDate(it.date)?.let { date ->
-                Calendar.getInstance().apply { time = date }.get(Calendar.MONTH) + 1 == month
-            } ?: false
-        }
-    }
-
     private fun parseDate(dateString: String): Date? {
-        return try {
-            SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault()).parse(dateString)
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    private fun updateTransactionList() {
-        transactionAdapter.updateList(dbHelper.getAllExpenses())
+        return try { SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault()).parse(dateString) }
+        catch (e: Exception) { e.printStackTrace(); null }
     }
 
     private fun showToast(message: String) {
