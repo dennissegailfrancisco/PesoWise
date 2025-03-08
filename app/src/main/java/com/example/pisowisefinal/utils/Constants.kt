@@ -20,7 +20,6 @@ object Constants {
 
     const val RECENT_TRANSACTIONS_LIMIT = 20
 
-    val DEFAULT_ICON = R.drawable.ic_placeholder
 
     val categoryIcons = mapOf(
         "Food" to R.drawable.foodicon,
