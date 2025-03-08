@@ -12,7 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PisoWiseFinal"
         tools:targetApi="31">
-
+        <activity
+            android:name=".ui.SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.PisoWiseFinal">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <!-- Main Dashboard Activity -->
         <activity
             android:name=".ui.dashboards.MainActivity"
