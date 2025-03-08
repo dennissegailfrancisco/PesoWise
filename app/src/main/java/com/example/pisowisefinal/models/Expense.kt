@@ -3,7 +3,7 @@ package com.example.pisowisefinal.models
 import com.example.pisowisefinal.utils.Constants
 
 data class Expense(
-    val id: Int,  // Make it non-nullable to ensure deletion works properly
+    val id: Int,
     val category: String,
     val date: String,
     val amount: Double,

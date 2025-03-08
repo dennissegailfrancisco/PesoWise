@@ -11,7 +11,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     companion object {
         private const val DATABASE_NAME = "pesowise.db"
-        private const val DATABASE_VERSION = 3  // Increase the version
+        private const val DATABASE_VERSION = 3
 
         const val TABLE_EXPENSES = "expenses"
         const val COLUMN_ID = "id"
@@ -49,72 +49,63 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     }
 
     fun addExpense(expense: Expense): Long {
-        val db = writableDatabase
-        val values = ContentValues().apply {
-            put(COLUMN_CATEGORY, expense.category)
-            put(COLUMN_DATE, expense.date)
-            put(COLUMN_AMOUNT, expense.amount)
-            put(COLUMN_NOTE, expense.message)  // Now it won't cause errors
-            put(COLUMN_TRANSACTION_TYPE, expense.transactionType)  // Store income/expense type
-            put(COLUMN_TITLE, expense.title)  // Store transaction title
+        return writableDatabase.use { db ->
+            val values = ContentValues().apply {
+                put(COLUMN_CATEGORY, expense.category)
+                put(COLUMN_DATE, expense.date)
+                put(COLUMN_AMOUNT, expense.amount)
+                put(COLUMN_NOTE, expense.message)
+                put(COLUMN_TRANSACTION_TYPE, expense.transactionType)
+                put(COLUMN_TITLE, expense.title)
+            }
+            db.insert(TABLE_EXPENSES, null, values)
         }
-        return db.insert(TABLE_EXPENSES, null, values).also { db.close() }
     }
 
     fun getAllExpenses(): List<Expense> {
         val expenseList = mutableListOf<Expense>()
-        val db = readableDatabase
-        val cursor = db.rawQuery("SELECT * FROM $TABLE_EXPENSES", null)
-
-        while (cursor.moveToNext()) {
-            val id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID))
-            val category = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY))
-            val date = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DATE))
-            val amount = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_AMOUNT))
-            val note = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NOTE))
-            val transactionType = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TRANSACTION_TYPE))
-            val title = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TITLE))
-
-            expenseList.add(Expense(id, category, date, amount, transactionType, title, note))
+        readableDatabase.use { db ->
+            db.rawQuery("SELECT * FROM $TABLE_EXPENSES", null).use { cursor ->
+                while (cursor.moveToNext()) {
+                    expenseList.add(
+                        Expense(
+                            id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)),
+                            category = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CATEGORY)),
+                            date = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DATE)),
+                            amount = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_AMOUNT)),
+                            transactionType = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TRANSACTION_TYPE)),
+                            title = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TITLE)),
+                            message = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NOTE))
+                        )
+                    )
+                }
+            }
         }
-
-        cursor.close()
-        db.close()
         return expenseList
     }
 
     fun deleteExpense(id: Int?): Boolean {
-        if (id == null) return false  // Ensure ID is not null
-        val db = this.writableDatabase
-        val result = db.delete(TABLE_EXPENSES, "$COLUMN_ID=?", arrayOf(id.toString()))
-        db.close()
-        return result > 0
+        return id?.let {
+            writableDatabase.use { db ->
+                db.delete(TABLE_EXPENSES, "$COLUMN_ID=?", arrayOf(it.toString())) > 0
+            }
+        } ?: false
     }
 
     fun getTotalIncomeAndExpenseForMonth(month: Int): Pair<Double, Double> {
-        val db = readableDatabase
-        val datePattern = "%-${String.format("%02d", month)}-%" // Matches 'YYYY-MM-%'
+        val datePattern = "%-${String.format("%02d", month)}-%"
+        return readableDatabase.use { db ->
+            val income = db.rawQuery("SELECT SUM(amount) FROM $TABLE_EXPENSES WHERE $COLUMN_TRANSACTION_TYPE = ? AND $COLUMN_DATE LIKE ?",
+                arrayOf(Constants.TYPE_INCOME, datePattern)).use { cursor ->
+                if (cursor.moveToFirst()) cursor.getDouble(0) else 0.0
+            }
 
-        val incomeQuery = "SELECT SUM(amount) FROM $TABLE_EXPENSES WHERE $COLUMN_TRANSACTION_TYPE = ? AND $COLUMN_DATE LIKE ?"
-        val expenseQuery = "SELECT SUM(amount) FROM $TABLE_EXPENSES WHERE $COLUMN_TRANSACTION_TYPE = ? AND $COLUMN_DATE LIKE ?"
+            val expense = db.rawQuery("SELECT SUM(amount) FROM $TABLE_EXPENSES WHERE $COLUMN_TRANSACTION_TYPE = ? AND $COLUMN_DATE LIKE ?",
+                arrayOf(Constants.TYPE_EXPENSE, datePattern)).use { cursor ->
+                if (cursor.moveToFirst()) cursor.getDouble(0) else 0.0
+            }
 
-        val incomeCursor = db.rawQuery(incomeQuery, arrayOf(Constants.TYPE_INCOME, datePattern))
-        val expenseCursor = db.rawQuery(expenseQuery, arrayOf(Constants.TYPE_EXPENSE, datePattern))
-
-        var totalIncome = 0.0
-        var totalExpense = 0.0
-
-        if (incomeCursor.moveToFirst()) {
-            totalIncome = incomeCursor.getDouble(0)
+            Pair(income, expense)
         }
-        if (expenseCursor.moveToFirst()) {
-            totalExpense = expenseCursor.getDouble(0)
-        }
-
-        incomeCursor.close()
-        expenseCursor.close()
-        db.close()
-
-        return Pair(totalIncome, totalExpense)
     }
 }

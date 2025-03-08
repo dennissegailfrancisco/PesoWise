@@ -10,6 +10,7 @@ import com.example.pisowisefinal.R
 import com.example.pisowisefinal.database.DatabaseHelper
 import com.example.pisowisefinal.models.Expense
 import com.example.pisowisefinal.ui.dashboards.MainActivity
+import com.example.pisowisefinal.utils.Constants
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -25,8 +26,6 @@ class AddExpensesActivity : AppCompatActivity() {
     private lateinit var btnSaveTransaction: Button
     private lateinit var backButton: ImageButton
 
-    private lateinit var incomeCategories: Array<String>
-    private lateinit var expenseCategories: Array<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,8 +34,7 @@ class AddExpensesActivity : AppCompatActivity() {
         initUI()
         setupSpinners()
         setupDatePicker()
-        setupSaveButton()
-        setupBackButton()
+        setupButtons()
     }
 
     private fun initUI() {
@@ -50,25 +48,20 @@ class AddExpensesActivity : AppCompatActivity() {
         editMessage = findViewById(R.id.editMessage)
         btnSaveTransaction = findViewById(R.id.btnSaveTransaction)
         backButton = findViewById(R.id.backButton)
-
-        incomeCategories = resources.getStringArray(R.array.income_categories)
-        expenseCategories = resources.getStringArray(R.array.expense_categories)
     }
 
     private fun setupSpinners() {
         val transactionTypes = resources.getStringArray(R.array.transaction_types_array)
 
-        ArrayAdapter(this, android.R.layout.simple_spinner_item, transactionTypes).apply {
+        spinnerTransactionType.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, transactionTypes).apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinnerTransactionType.adapter = this
         }
 
-        updateCategorySpinner("Income")
+        updateCategorySpinner(Constants.TYPE_EXPENSE)
 
         spinnerTransactionType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val selectedType = parent?.getItemAtPosition(position).toString()
-                updateCategorySpinner(selectedType)
+                updateCategorySpinner(parent?.getItemAtPosition(position).toString())
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -76,92 +69,94 @@ class AddExpensesActivity : AppCompatActivity() {
     }
 
     private fun setupDatePicker() {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val dateFormat = SimpleDateFormat(Constants.DATE_FORMAT, Locale.getDefault())
 
         editDate.apply {
             isFocusable = false
             isClickable = true
             setOnClickListener {
-                val todayCalendar = Calendar.getInstance().apply {
-                    set(Calendar.HOUR_OF_DAY, 0)
-                    set(Calendar.MINUTE, 0)
-                    set(Calendar.SECOND, 0)
-                    set(Calendar.MILLISECOND, 0)
-                }
+                val today = Calendar.getInstance().apply { resetTime() }
 
                 DatePickerDialog(
                     this@AddExpensesActivity,
                     { _, year, month, day ->
-                        val selectedCalendar = Calendar.getInstance().apply {
+                        val selectedDate = Calendar.getInstance().apply {
                             set(year, month, day)
-                            set(Calendar.HOUR_OF_DAY, 0)
-                            set(Calendar.MINUTE, 0)
-                            set(Calendar.SECOND, 0)
-                            set(Calendar.MILLISECOND, 0)
+                            resetTime()
                         }
 
-                        if (selectedCalendar.after(todayCalendar)) {
-                            Toast.makeText(this@AddExpensesActivity, "You can't select future dates!", Toast.LENGTH_SHORT).show()
+                        if (selectedDate.after(today)) {
+                            showToast("You can't select future dates!")
                         } else {
-                            setText(dateFormat.format(selectedCalendar.time))
+                            setText(dateFormat.format(selectedDate.time))
                         }
                     },
-                    todayCalendar.get(Calendar.YEAR),
-                    todayCalendar.get(Calendar.MONTH),
-                    todayCalendar.get(Calendar.DAY_OF_MONTH)
+                    today.get(Calendar.YEAR),
+                    today.get(Calendar.MONTH),
+                    today.get(Calendar.DAY_OF_MONTH)
                 ).show()
             }
         }
     }
 
-    private fun setupSaveButton() {
-        btnSaveTransaction.setOnClickListener {
-            val transactionType = spinnerTransactionType.selectedItem.toString()
-            val category = spinnerCategory.selectedItem?.toString() ?: ""
-            val amountText = editAmount.text.toString()
-            val date = editDate.text.toString()
-            val title = editTitle.text.toString()
-            val message = editMessage.text.toString()
-
-            if (category.isEmpty() || date.isEmpty() || title.isEmpty() || amountText.isEmpty()) {
-                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            val amount = amountText.toDoubleOrNull()
-            if (amount == null || amount <= 0) {
-                Toast.makeText(this, "Enter a valid amount", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            val expense = Expense(0, category, date, amount, transactionType, title, message)
-            dbHelper.addExpense(expense)
-
-            Toast.makeText(this, "Transaction Added!", Toast.LENGTH_SHORT).show()
-
-            val intent = Intent(this, MainActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-            }
-            startActivity(intent)
-            finish()
-        }
+    private fun setupButtons() {
+        btnSaveTransaction.setOnClickListener { saveTransaction() }
+        backButton.setOnClickListener { navigateToMain() }
     }
 
-    private fun setupBackButton() {
-        backButton.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP // Ensures no duplicate activities
-            }
-            startActivity(intent)
-            finish()
+    private fun saveTransaction() {
+        val transactionType = spinnerTransactionType.selectedItem.toString()
+        val category = spinnerCategory.selectedItem?.toString().orEmpty()
+        val amountText = editAmount.text.toString()
+        val date = editDate.text.toString()
+        val title = editTitle.text.toString()
+        val message = editMessage.text.toString()
+
+        if (category.isEmpty() || date.isEmpty() || title.isEmpty() || amountText.isEmpty()) {
+            showToast("Please fill in all fields")
+            return
         }
+
+        val amount = amountText.toDoubleOrNull()
+        if (amount == null || amount <= 0) {
+            showToast("Enter a valid amount")
+            return
+        }
+
+        val expense = Expense(0, category, date, amount, transactionType, title, message)
+        dbHelper.addExpense(expense)
+
+        showToast("Transaction Added!")
+        navigateToMain()
+    }
+
+    private fun navigateToMain() {
+        startActivity(Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        })
+        finish()
     }
 
     private fun updateCategorySpinner(transactionType: String) {
-        val categories = if (transactionType == "Income") incomeCategories else expenseCategories
-        val categoryAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categories).apply {
+        val categories = if (transactionType == Constants.TYPE_INCOME) {
+            resources.getStringArray(R.array.income_categories)
+        } else {
+            resources.getStringArray(R.array.expense_categories)
+        }
+
+        spinnerCategory.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categories).apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
-        spinnerCategory.adapter = categoryAdapter
+    }
+
+    private fun Calendar.resetTime() {
+        set(Calendar.HOUR_OF_DAY, 0)
+        set(Calendar.MINUTE, 0)
+        set(Calendar.SECOND, 0)
+        set(Calendar.MILLISECOND, 0)
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

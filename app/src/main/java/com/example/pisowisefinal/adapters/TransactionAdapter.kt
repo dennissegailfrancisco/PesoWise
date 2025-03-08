@@ -9,6 +9,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.pisowisefinal.R
 import com.example.pisowisefinal.database.DatabaseHelper
 import com.example.pisowisefinal.models.Expense
@@ -21,7 +23,7 @@ class TransactionAdapter(
     private val onItemClick: (Expense) -> Unit
 ) : RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
 
-    class TransactionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class TransactionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val icon: ImageView = view.findViewById(R.id.icon)
         val category: TextView = view.findViewById(R.id.textCategory)
         val date: TextView = view.findViewById(R.id.textDate)
@@ -37,25 +39,23 @@ class TransactionAdapter(
 
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
         val expense = expenses[position]
+        with(holder) {
+            category.text = expense.category
+            date.text = expense.date
+            type.text = expense.transactionType
 
-        holder.category.text = expense.category
-        holder.date.text = expense.date
-        holder.type.text = expense.transactionType
+            val formattedAmount = "₱${String.format("%.2f", abs(expense.amount))}"
+            amount.text = if (expense.transactionType == Constants.TYPE_EXPENSE) "- $formattedAmount" else "+ $formattedAmount"
 
-        val formattedAmount = String.format("%.2f", abs(expense.amount))
-        holder.amount.text = if (expense.transactionType == Constants.TYPE_EXPENSE) {
-            "- ₱$formattedAmount"
-        } else {
-            "+ ₱$formattedAmount"
-        }
+            Glide.with(itemView.context)
+                .load(Constants.categoryIcons[expense.category] ?: R.drawable.ic_placeholder)
+                .transform(RoundedCorners(35))
+                .placeholder(R.drawable.ic_placeholder)
+                .error(R.drawable.ic_placeholder)
+                .into(icon)
 
-        val iconResource = Constants.categoryIcons[expense.category] ?: R.drawable.ic_placeholder
-        holder.icon.setImageResource(iconResource)
-
-        holder.itemView.setOnClickListener { onItemClick(expense) }
-
-        holder.deleteButton.setOnClickListener {
-            showDeleteDialog(holder.itemView.context, position)
+            itemView.setOnClickListener { onItemClick(expense) }
+            deleteButton.setOnClickListener { showDeleteDialog(itemView.context, position) }
         }
     }
 
@@ -65,9 +65,7 @@ class TransactionAdapter(
         AlertDialog.Builder(context).apply {
             setTitle(Constants.ALERT_DIALOG_TITLE)
             setMessage(Constants.ALERT_DIALOG_MESSAGE)
-            setPositiveButton(Constants.ALERT_DIALOG_POSITIVE) { _, _ ->
-                deleteItem(position)
-            }
+            setPositiveButton(Constants.ALERT_DIALOG_POSITIVE) { _, _ -> deleteItem(position) }
             setNegativeButton(Constants.ALERT_DIALOG_NEGATIVE, null)
             show()
         }
@@ -83,8 +81,10 @@ class TransactionAdapter(
     }
 
     fun updateList(newList: List<Expense>) {
-        expenses.clear()
-        expenses.addAll(newList)
-        notifyDataSetChanged()
+        expenses.apply {
+            clear()
+            addAll(newList)
+        }
+        notifyItemRangeChanged(0, expenses.size)
     }
 }
